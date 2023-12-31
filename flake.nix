@@ -4,7 +4,9 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-
+    nvim-contrib = {
+      url = "github:heshdotcc/nixpkgs-vim-extra-plugins";
+    };
     # Add bleeding-edge plugins here.
     # They can be updated with `nix flake update` (make sure to commit the generated flake.lock)
     # wf-nvim = {
@@ -17,6 +19,7 @@
     self,
     nixpkgs,
     flake-utils,
+    nvim-contrib,
     ...
   }: let
     supportedSystems = [
@@ -33,6 +36,7 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
+          inputs.nvim-contrib.overlays.default
           neovim-overlay
         ];
       };
