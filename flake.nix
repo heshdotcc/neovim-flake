@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    /*
     nvim-contrib = {
       url = "github:heshdotcc/nixpkgs-vim-extra-plugins";
     };
@@ -14,18 +13,13 @@
     #   url = "github:Cassin01/wf.nvim";
     #   flake = false;
     # };
-    github-nvim-theme-crystal = {
-      url = "github:heshdotcc/github-nvim-theme-crystal";
-      flake = false;
-    };
-    */
   };
 
   outputs = inputs @ {
     self,
     nixpkgs,
     flake-utils,
-    #nvim-contrib,
+    nvim-contrib,
     ...
   }: let
     supportedSystems = [
@@ -42,7 +36,7 @@
       pkgs = import nixpkgs {
         inherit system;
         overlays = [
-          #inputs.nvim-contrib.overlays.default
+          inputs.nvim-contrib.overlays.default
           neovim-overlay
         ];
       };
