@@ -1,65 +1,26 @@
 {
-  description = "Neovim derivation";
+  description = "A flake for LunarVim with custom config";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    nvim-contrib = {
-      url = "github:heshdotcc/nixpkgs-vim-extra-plugins";
-    };
-    # Add bleeding-edge plugins here.
-    # They can be updated with `nix flake update` (make sure to commit the generated flake.lock)
-    # wf-nvim = {
-    #   url = "github:Cassin01/wf.nvim";
-    #   flake = false;
-    # };
   };
 
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    flake-utils,
-    nvim-contrib,
-    ...
-  }: let
-    supportedSystems = [
-      "x86_64-linux"
-      "aarch64-linux"
-      "x86_64-darwin"
-      "aarch64-darwin"
-    ];
+  outputs = { self, nixpkgs }: let
+    lunarvimPkg = nixpkgs.legacyPackages.x86_64-linux.lunarvim;
+  in {
+    packages.x86_64-linux.lunarvim = lunarvimPkg;
 
-    # This is where the Neovim derivation is built.
-    neovim-overlay = import ./nix/neovim-overlay.nix {inherit inputs;};
-  in
-    flake-utils.lib.eachSystem supportedSystems (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        overlays = [
-          inputs.nvim-contrib.overlays.default
-          neovim-overlay
-        ];
-      };
-      shell = pkgs.mkShell {
-        name = "nvim-devShell";
-        buildInputs = with pkgs; [
-          lua-language-server
-          nil
-          stylua
-          luajitPackages.luacheck
-        ];
-      };
-    in {
-      packages = rec {
-        default = nvim;
-        nvim = pkgs.nvim-pkg;
-      };
-      devShells = {
-        default = shell;
-      };
-    })
-    // {
-      # You can add this overlay to your NixOS configuration
-      overlays.default = neovim-overlay;
+    defaultPackage.x86_64-linux = lunarvimPkg;
+
+    # Add a custom app that sets up lunarvim with your configuration
+    apps.x86_64-linux.mixing = {
+      type = "app";
+      program = "${lunarvimPkg}/bin/lvim";
+      configure = ''
+        mkdir -p ~/.config/lvim
+        cp ${self}/configs/config.lua ~/.config/lvim/config.lua
+      '';
     };
+  };
 }
+
