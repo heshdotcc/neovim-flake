@@ -112,8 +112,59 @@ vim.g.sqlite_clib_path = require('luv').os_getenv('LIBSQLITE')
 
 vim.g.skip_ts_context_commentstring_module = true
 
-require('github-theme').setup({
-  -- ...
-})
+cmd('colorscheme github_dark_default')
 
-vim.cmd('colorscheme github_dark_default')
+g.transparent_enabled = true
+
+--[[
+local alpha = require('alpha')
+local dashboard = require("alpha.themes.dashboard")
+-- Set header
+dashboard.section.header.opts = {
+    hl = "Text", position = "center"
+}
+dashboard.section.header.val = {
+    "ooooo      ooo              o8o                     ",
+    "`888b.     `8'              `\"'                    ",
+    " 8 `88b.    8  oooo    ooo oooo  ooo. .oo.  .oo.    ",
+    " 8   `88b.  8   `88.  .8'  `888  `888P\"Y88bP\"Y88b ",
+    " 8     `88b.8    `88..8'    888   888   888   888   ",
+    " 8       `888     `888'     888   888   888   888   ",
+    "o8o        `8      `8'     o888o o888o o888o o888o  ",
+}
+-- Set menu
+dashboard.section.header.opts = {
+    hl = "Text", position = "center"
+}
+dashboard.section.buttons.val = {
+    dashboard.button( "f", "New file", ":ene <BAR> startinsert <CR>"),
+    dashboard.button( "s", "Search",   ":cd $HOME/work | Telescope find_files<CR>"),
+    dashboard.button( "r", "Recent",   ":Telescope oldfiles<CR>"),
+    dashboard.button( "e", "Exit",     ":qa<CR>"),
+}
+-- Send config to alpha
+alpha.setup(dashboard.opts)
+]]--
+
+vim.g.mapleader = "<Space><Space>"
+
+vim.api.nvim_set_keymap("n", "<Space><Space>b", ":Neotree<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<Space><Space>r", ":luafile %<CR>", { noremap = true, silent = true })
+
+-- TODO: Navigate buffers easily, copy content among them
+--[[
+vim.api.nvim_create_autocmd({"BufReadPost"}, {
+    pattern = {"*"},
+    callback = function()
+        if vim.fn.line("'\"") > 1 and vim.fn.line("'\"") <= vim.fn.line("$") then
+            vim.fn.nvim_exec("normal! g'\"",false)
+        end
+    end
+})
+]]--
+
+-- Preserve cursor position for each file
+vim.api.nvim_create_autocmd("BufReadPost", {
+    pattern = "*",
+    command = [[if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif]]
+})

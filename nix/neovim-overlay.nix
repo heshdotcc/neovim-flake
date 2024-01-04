@@ -63,11 +63,16 @@ with final.pkgs.lib; let
     vimPlugins.plenary-nvim
     vimPlugins.nvim-web-devicons
     vimPlugins.vim-repeat
+    vimPlugins.nui-nvim
+
+    vimPlugins.alpha-nvim
     # ^ libraries that other plugins depend on
     # bleeding-edge plugins from flake inputs
     # (mkNvimPlugin inputs.wf-nvim "wf.nvim") # (example) keymap hints | https://github.com/Cassin01/wf.nvim
     # ^ bleeding-edge plugins from flake inputs
     vimExtraPlugins.github-nvim-theme
+    vimExtraPlugins.nvim-transparent
+    vimExtraPlugins.neo-tree-nvim
   ];
 
   extraPackages = with pkgs; [

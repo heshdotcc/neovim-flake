@@ -22,6 +22,10 @@ local function extra_mode_status()
   return ''
 end
 
+local custom_theme = require'lualine.themes.iceberg_dark'
+
+--custom_theme.normal
+
 require('lualine').setup {
   globalstatus = true,
   sections = {
@@ -35,7 +39,7 @@ require('lualine').setup {
     },
   },
   options = {
-    theme = 'auto',
+    theme = 'iceberg_dark',
   },
   -- Example top tabline configuration (this may clash with other plugins)
   -- tabline = {
@@ -80,3 +84,5 @@ require('lualine').setup {
   },
   extensions = { 'fugitive', 'fzf', 'toggleterm', 'quickfix' },
 }
+
+--vim.cmd("highlight lualine_c_normal guibg=NONE")
