@@ -13,7 +13,7 @@
     defaultPackage.x86_64-linux = lunarvimPkg;
 
     # Add a custom app that sets up lunarvim with your configuration
-    apps.x86_64-linux.mixing = {
+    apps.x86_64-linux.lunar = {
       type = "app";
       program = "${lunarvimPkg}/bin/lvim";
       configure = ''
